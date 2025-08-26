@@ -34,7 +34,6 @@ Para iniciar o servidor de desenvolvimento:
 ```bash
 npm run dev
 ```
-```
 
 ## Front-end (React.js)
 
