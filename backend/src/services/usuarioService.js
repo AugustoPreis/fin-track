@@ -128,6 +128,12 @@ async function atualizar(usuarioId, dados, usuarioLogado) {
   usuarioDB.email = email.trim().toLowerCase();
   usuarioDB.senha = atualizaSenha ? Encrypt.hash(senha) : null;
 
+  const usuarioComEmail = await usuarioRepository.buscarPorEmail({ email: usuarioDB.email, inativos: true });
+
+  if (usuarioComEmail && usuarioComEmail.id != usuarioDB.id) {
+    throw new BadRequestError('Já existe um usuário cadastrado com este email');
+  }
+
   await usuarioRepository.atualizar(usuarioDB);
 
   delete usuarioDB.senha;
