@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Avatar, Button, Card, Col, Menu, Modal, Row, Typography, Space, Dropdown, Tag } from 'antd';
+import axios from 'axios';
+import { Avatar, Button, Card, Col, Menu, Modal, Row, Typography, Space, Dropdown, Tag, notification } from 'antd';
 import { UserOutlined, LogoutOutlined, MenuOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import Alteracao from '../pages/usuario/Alteracao';
@@ -20,9 +21,17 @@ export default function AppHeader() {
       });
     }
 
-    auth.logout();
-    navigate('/login');
-  };
+    //Remove o token do servidor
+    axios.delete('/v1/usuarios/logout').catch((err) => {
+      notification.error({
+        message: 'Erro ao deslogar no servidor!',
+        description: err.response?.data?.message,
+      });
+    }).finally(() => {
+      auth.logout();
+      navigate('/login');
+    });
+  }
 
   if (!auth.isAuthenticated()) {
     handleLogout();
