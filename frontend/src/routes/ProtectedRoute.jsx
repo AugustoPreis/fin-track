@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Cabecalho from '../components/Cabecalho';
+import Page from '../components/Page';
 import { useAuth } from '../providers/AuthProvider';
 
 export default function ProtectedRoute() {
@@ -37,6 +39,11 @@ export default function ProtectedRoute() {
   }
 
   return (
-    <Outlet />
+    <React.Fragment>
+      <Page>
+        <Cabecalho />
+        <Outlet />
+      </Page>
+    </React.Fragment>
   );
 }
