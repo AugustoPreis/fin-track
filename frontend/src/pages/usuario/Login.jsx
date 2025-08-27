@@ -32,7 +32,7 @@ export default function Login() {
       email,
       senha,
     }).then((response) => {
-      localStorage.setItem('user', JSON.stringify(response.data));
+      auth.login(response.data);
 
       if (response.data.reativado) {
         notification.success({
