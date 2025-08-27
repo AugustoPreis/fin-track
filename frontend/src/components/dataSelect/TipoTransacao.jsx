@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 
-export default function TipoTransacaoDataSelect({ ambos, ...props }) {
+export default function TipoTransacaoDataSelect({ ambos = true, ...props }) {
   const options = [
     { value: 'A', label: 'Ambos' },
     { value: 'R', label: 'Receita' },
