@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
-import { Button, Card, Col, Divider, Form, Input, notification, Row, Typography } from 'antd';
+import { Button, Card, Col, Divider, Form, Input, Row, Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { useFeedback } from '../../providers/FeedbackProvider';
 import { useAuth } from '../../providers/AuthProvider';
 
 export default function Login() {
@@ -10,6 +11,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const feedback = useFeedback();
   const auth = useAuth();
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function Login() {
       auth.login(response.data);
 
       if (response.data.reativado) {
-        notification.success({
+        feedback.notification.success({
           message: 'Usuário reativado!',
           description: `Bem-vindo(a) de volta, ${response.data.nome}.\nSeu usuário foi reativado`,
           style: { whiteSpace: 'pre-wrap' },
@@ -43,7 +45,7 @@ export default function Login() {
 
         auth.login(response.data);
       } else {
-        notification.success({
+        feedback.notification.success({
           message: 'Login realizado com sucesso!',
           description: `Bem-vindo(a), ${response.data.nome}`,
         });
@@ -51,7 +53,7 @@ export default function Login() {
 
       navigate('/transacoes');
     }).catch((error) => {
-      notification.error({
+      feedback.notification.error({
         message: 'Erro ao realizar login!',
         description: error.response?.data?.message,
       });

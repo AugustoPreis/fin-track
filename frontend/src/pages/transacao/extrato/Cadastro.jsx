@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Col, Form, Input, message, Modal, Row, } from 'antd';
+import { Col, Form, Input, Modal, Row, } from 'antd';
+import { useFeedback } from '../../../providers/FeedbackProvider';
 import TipoTransacaoDataSelect from '../../../components/dataSelect/TipoTransacao';
 import CategoriaDataSelect from '../../../components/dataSelect/Categoria';
 import { DatePicker } from '../../../components/DateFnsPicker';
@@ -10,6 +11,7 @@ export default function Cadastro({ children, onClose, transacaoId }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const feedback = useFeedback();
   const tipoWatch = Form.useWatch('tipo', form);
 
   useEffect(() => {
@@ -34,7 +36,7 @@ export default function Cadastro({ children, onClose, transacaoId }) {
         cor: response.data.cor,
       });
     }).catch((err) => {
-      Modal.error({
+      feedback.modal.error({
         title: 'Erro ao buscar transação!',
         content: err.response?.data?.message,
       });
@@ -58,11 +60,11 @@ export default function Cadastro({ children, onClose, transacaoId }) {
       axios.put(`/v1/transacoes/${transacaoId}`, {
         ...body,
       }).then(() => {
-        message.success('Transação editada com sucesso!');
+        feedback.message.success('Transação editada com sucesso!');
         onClose?.();
         handleClear();
       }).catch((err) => {
-        Modal.error({
+        feedback.modal.error({
           title: 'Erro ao editar transação',
           content: err.response?.data?.message,
         });
@@ -73,11 +75,11 @@ export default function Cadastro({ children, onClose, transacaoId }) {
       axios.post('/v1/transacoes', {
         ...body,
       }).then(() => {
-        message.success('Transação salva com sucesso!');
+        feedback.message.success('Transação salva com sucesso!');
         onClose?.();
         handleClear();
       }).catch((err) => {
-        Modal.error({
+        feedback.modal.error({
           title: 'Erro ao salvar transação',
           content: err.response?.data?.message,
         });

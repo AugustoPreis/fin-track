@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Col, Form, Input, Modal, notification, Row, } from 'antd';
+import { Col, Form, Input, Modal, Row, } from 'antd';
+import { useFeedback } from '../../providers/FeedbackProvider';
 
 export default function Cadastro({ children, onClose, usuarioId }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const feedback = useFeedback();
 
   const modal = () => {
     setOpen(true);
@@ -26,7 +28,7 @@ export default function Cadastro({ children, onClose, usuarioId }) {
         email: response.data.email,
       });
     }).catch((err) => {
-      Modal.error({
+      feedback.modal.error({
         title: 'Erro ao buscar usuário!',
         content: err.response?.data?.message,
       });
@@ -47,7 +49,7 @@ export default function Cadastro({ children, onClose, usuarioId }) {
     axios.put(`/v1/usuarios/${usuarioId}`, {
       ...body,
     }).then(() => {
-      notification.success({
+      feedback.notification.success({
         message: 'Usuário alterado com sucesso!',
         description: 'As informações do usuário foram atualizadas com sucesso. Pode ser necessário relogar no sistema para aplicar as alterações.',
       });
@@ -55,7 +57,7 @@ export default function Cadastro({ children, onClose, usuarioId }) {
       onClose?.();
       handleClear();
     }).catch((err) => {
-      Modal.error({
+      feedback.modal.error({
         title: 'Erro ao editar usuário',
         content: err.response?.data?.message,
       });

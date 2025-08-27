@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Button, Card, Col, Divider, Form, Input, notification, Row, Typography } from 'antd';
+import { Button, Card, Col, Divider, Form, Input, Row, Typography } from 'antd';
+import { useFeedback } from '../../providers/FeedbackProvider';
 import { useAuth } from '../../providers/AuthProvider';
 
 export default function Cadastro() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const feedback = useFeedback();
   const auth = useAuth();
 
   const handleSubmit = (values) => {
@@ -19,14 +21,14 @@ export default function Cadastro() {
       nome,
       email,
       senha,
-    }).then((response) => {
-      notification.success({
+    }).then(() => {
+      feedback.notification.success({
         message: 'Cadastro realizado com sucesso!',
         description: 'Realize o login para continuar',
       });
       navigate(`/login?email=${email}&senha=${senha}`);
     }).catch((error) => {
-      notification.error({
+      feedback.notification.error({
         message: 'Erro ao realizar cadastro!',
         description: error.response?.data?.message,
       });

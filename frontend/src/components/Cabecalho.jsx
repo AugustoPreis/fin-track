@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Avatar, Button, Card, Col, Menu, Modal, Row, Typography, Space, Dropdown, Tag, notification } from 'antd';
+import { Avatar, Button, Card, Col, Menu, Row, Typography, Space, Dropdown, Tag } from 'antd';
 import { UserOutlined, LogoutOutlined, MenuOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import Alteracao from '../pages/usuario/Alteracao';
 import { useAuth } from '../providers/AuthProvider';
+import { useFeedback } from '../providers/FeedbackProvider';
 
 export default function AppHeader() {
   const navigate = useNavigate();
   const auth = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const feedback = useFeedback();
 
   const handleLogout = (confirm) => {
     if (confirm) {
-      return Modal.confirm({
+      return feedback.modal.confirm({
         title: 'Confirmar saída',
         content: 'Você tem certeza que deseja sair?',
         okText: 'Sim',
@@ -23,7 +25,7 @@ export default function AppHeader() {
 
     //Remove o token do servidor
     axios.delete('/v1/usuarios/logout').catch((err) => {
-      notification.error({
+      feedback.notification.error({
         message: 'Erro ao deslogar no servidor!',
         description: err.response?.data?.message,
       });

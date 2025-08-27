@@ -1,12 +1,14 @@
 import { format } from 'date-fns';
 import axios from 'axios';
-import { Col, Modal, notification, Row, Table } from 'antd';
+import { Col,  Row, Table } from 'antd';
 import { SettingOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useFeedback } from '../../../providers/FeedbackProvider';
 import { formataReal } from '../../../utils/real';
 import { useExtratoContext } from './Context';
 
 export default function Listagem() {
   const { data, loading, fetchData, removeItem } = useExtratoContext();
+  const feedback = useFeedback();
   const columns = [
     {
       title: 'Valor',
@@ -55,7 +57,7 @@ export default function Listagem() {
   ];
 
   const handleConfirmDelete = (transacao) => {
-    Modal.confirm({
+    feedback.modal.confirm({
       title: 'Atenção',
       content: `Deseja remover a transação "${transacao.descricao}"? Esta ação é irreversível`,
       okText: 'Confirmar',
@@ -65,13 +67,13 @@ export default function Listagem() {
 
   const handleDelete = (transacaoId) => {
     axios.delete(`/v1/transacoes/${transacaoId}`).then(() => {
-      notification.success({
+      feedback.notification.success({
         message: 'Sucesso!',
         description: 'Transação removida com sucesso.',
       });
       removeItem(transacaoId);
     }).catch((err) => {
-      Modal.error({
+      feedback.modal.error({
         title: 'Erro ao remover a transação!',
         content: err.response?.data?.message,
       });

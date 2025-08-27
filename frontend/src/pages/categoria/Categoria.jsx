@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Card, Col, Input, message, Modal, Popconfirm, Row, Table } from 'antd';
+import { Button, Card, Col, Input, Popconfirm, Row, Table } from 'antd';
 import { SettingOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useFeedback } from '../../providers/FeedbackProvider';
 import Label from '../../components/Label';
 import Cadastro from './Cadastro';
 
@@ -10,6 +11,7 @@ export default function Categoria() {
   const [filtro, setFiltro] = useState({});
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
+  const feedback = useFeedback();
   const columns = [
     {
       title: 'Nome',
@@ -87,7 +89,7 @@ export default function Categoria() {
       setData(response.data.data);
       setPagination((prev) => ({ ...prev, current: novaPagina, total: response.data.total }));
     }).catch((err) => {
-      Modal.error({
+      feedback.modal.error({
         title: 'Erro ao buscar categorias!',
         content: err.response?.data?.message,
       });
@@ -100,10 +102,10 @@ export default function Categoria() {
     setLoading(true);
 
     axios.delete(`/v1/categorias/${categoriaId}`).then(() => {
-      message.success('Categoria removida com sucesso!');
+      feedback.message.success('Categoria removida com sucesso!');
       fetchData();
     }).catch((err) => {
-      Modal.error({
+      feedback.modal.error({
         title: 'Erro ao remover categoria!',
         content: err.response?.data?.message,
       });

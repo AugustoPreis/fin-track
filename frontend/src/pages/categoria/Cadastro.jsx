@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Col, ColorPicker, Form, Input, message, Modal, Row } from 'antd';
+import { Col, ColorPicker, Form, Input, Modal, Row } from 'antd';
 import TipoTransacaoDataSelect from '../../components/dataSelect/TipoTransacao';
+import { useFeedback } from '../../providers/FeedbackProvider';
 
 export default function Cadastro({ children, onClose, categoriaId }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const feedback = useFeedback();
 
   const modal = (e) => {
     setOpen(true);
@@ -26,7 +28,7 @@ export default function Cadastro({ children, onClose, categoriaId }) {
         cor: response.data.cor,
       });
     }).catch((err) => {
-      Modal.error({
+      feedback.modal.error({
         title: 'Erro ao buscar categoria!',
         content: err.response?.data?.message,
       });
@@ -48,11 +50,11 @@ export default function Cadastro({ children, onClose, categoriaId }) {
       axios.put(`/v1/categorias/${categoriaId}`, {
         ...body,
       }).then(() => {
-        message.success('Categoria editada com sucesso!');
+        feedback.message.success('Categoria editada com sucesso!');
         onClose?.();
         handleClear();
       }).catch((err) => {
-        Modal.error({
+        feedback.modal.error({
           title: 'Erro ao editar categoria',
           content: err.response?.data?.message,
         });
@@ -63,11 +65,11 @@ export default function Cadastro({ children, onClose, categoriaId }) {
       axios.post('/v1/categorias', {
         ...body,
       }).then(() => {
-        message.success('Categoria salva com sucesso!');
+        feedback.message.success('Categoria salva com sucesso!');
         onClose?.();
         handleClear();
       }).catch((err) => {
-        Modal.error({
+        feedback.modal.error({
           title: 'Erro ao salvar categoria',
           content: err.response?.data?.message,
         });

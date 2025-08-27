@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { startOfMonth, endOfMonth } from 'date-fns';
 import axios from 'axios';
-import { Button, Card, Col, Divider, Modal, Row } from 'antd';
+import { Button, Card, Col, Divider, Row } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { DatePicker } from '../../../components/DateFnsPicker';
 import Label from '../../../components/Label';
+import { useFeedback } from '../../../providers/FeedbackProvider';
 import Listagem from './Listagem';
 import { ExtratoContext } from './Context';
 import MaisFiltros from './MaisFiltros';
@@ -15,6 +16,7 @@ export default function Extrato() {
   const [loading, setLoading] = useState(false);
   const [filtro, setFiltro] = useState({ dataInicial: startOfMonth(new Date()), dataFinal: endOfMonth(new Date()) });
   const [data, setData] = useState([]);
+  const feedback = useFeedback();
 
   useEffect(() => {
     fetchData('abriu-pagina');
@@ -47,7 +49,7 @@ export default function Extrato() {
         setData(response.data);
       }
     }).catch((err) => {
-      Modal.error({
+      feedback.modal.error({
         title: 'Erro ao buscar transações!',
         content: err.response?.data?.message,
       });
