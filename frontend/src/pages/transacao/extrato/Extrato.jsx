@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { startOfMonth, endOfMonth } from 'date-fns';
 import axios from 'axios';
 import { Button, Card, Col, Divider, Modal, Row } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { DatePicker } from '../../../components/DateFnsPicker';
-import Page from '../../../components/Page';
 import Label from '../../../components/Label';
 import Listagem from './Listagem';
 import { ExtratoContext } from './Context';
@@ -68,7 +67,7 @@ export default function Extrato() {
   }
 
   return (
-    <Page>
+    <React.Fragment>
       <ExtratoContext.Provider value={{
         data,
         filtro,
@@ -147,6 +146,6 @@ export default function Extrato() {
           </Row>
         </Card>
       </ExtratoContext.Provider>
-    </Page>
+    </React.Fragment>
   );
 }

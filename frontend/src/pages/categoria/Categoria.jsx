@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Card, Col, Input, message, Modal, Popconfirm, Row, Table } from 'antd';
 import { SettingOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import Page from '../../components/Page';
 import Label from '../../components/Label';
 import Cadastro from './Cadastro';
 
@@ -118,7 +117,7 @@ export default function Categoria() {
   }
 
   return (
-    <Page>
+    <React.Fragment>
       <Card>
         <Row gutter={[10, 10]}
           justify='space-between'
@@ -159,6 +158,6 @@ export default function Categoria() {
           pagination={pagination}
           onChange={(pag) => fetchData(pag.current)} />
       </Card>
-    </Page>
+    </React.Fragment>
   );
 }
