@@ -23,6 +23,7 @@ async function buscarPorEmail(params, conn) {
       usuarios.id,
       usuarios.nome,
       usuarios.email,
+      usuarios.plano,
       usuarios.senha,
       usuarios.ativo
     FROM usuarios
