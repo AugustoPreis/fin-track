@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { Avatar, Button, Card, Col, Menu, Modal, Row, Typography, Space, Dropdown, Tag } from 'antd';
 import { UserOutlined, LogoutOutlined, MenuOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import Alteracao from '../pages/usuario/Alteracao';
 import { useAuth } from '../providers/AuthProvider';
-import { useState } from 'react';
 
 export default function AppHeader() {
   const navigate = useNavigate();
@@ -51,18 +52,20 @@ export default function AppHeader() {
         <Col md={6}
           sm={16}
           xs={13}>
-          <Space>
-            <Avatar icon={<UserOutlined />} />
-            <Typography.Text strong ellipsis>
-              {auth.user.nome}
-            </Typography.Text>
-            {auth.user.plano === 'PREMIUM' ? (
-              <Tag color='gold'
-                style={{ fontWeight: 600 }}>
-                PREMIUM
-              </Tag>
-            ) : null}
-          </Space>
+          <Alteracao usuarioId={auth.user.id}>
+            <Space>
+              <Avatar icon={<UserOutlined />} />
+              <Typography.Text strong ellipsis>
+                {auth.user.nome}
+              </Typography.Text>
+              {auth.user.plano === 'PREMIUM' ? (
+                <Tag color='gold'
+                  style={{ fontWeight: 600 }}>
+                  PREMIUM
+                </Tag>
+              ) : null}
+            </Space>
+          </Alteracao>
         </Col>
         <Col md={12}
           xs={0}>
