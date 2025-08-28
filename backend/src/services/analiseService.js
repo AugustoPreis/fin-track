@@ -1,11 +1,12 @@
 const { GoogleGenAI } = require('@google/genai');
-const { format } = require('date-fns');
+const { format, startOfDay, endOfDay } = require('date-fns');
 const { ForbiddenError, NotFoundError, BadRequestError } = require('node-backend-utils/classes');
 const { isValidDate } = require('node-backend-utils/validators');
 const { formataReal } = require('../utils/real');
 const Planos = require('../enums/planos');
 const transacaoRepository = require('../repositories/transacaoRepository');
 const usuarioRepository = require('../repositories/usuarioRepository');
+const analiseRepository = require('../repositories/analiseRepository');
 
 const ai = new GoogleGenAI({});
 
@@ -22,8 +23,8 @@ async function gerar(dados, usuarioLogado) {
 
   const filtro = {
     usuarioId: usuarioLogado.id,
-    dataInicial: new Date(dados.dataInicial),
-    dataFinal: new Date(dados.dataFinal),
+    dataInicial: startOfDay(new Date(dados.dataInicial)),
+    dataFinal: endOfDay(new Date(dados.dataFinal)),
   };
 
   if (!isValidDate(filtro.dataInicial) || !isValidDate(filtro.dataFinal)) {
@@ -36,12 +37,21 @@ async function gerar(dados, usuarioLogado) {
     throw new NotFoundError('Nenhuma transação encontrada no período');
   }
 
-  const result = await ai.models.generateContent({
+  const { text: resultado } = await ai.models.generateContent({
     model: 'gemini-1.5-flash',
     contents: criaPromptIA(dados, usuarioDB, transacoes),
   });
 
-  return { resultado: result.text };
+  const id = await analiseRepository.cadastrar({
+    usuarioId: usuarioLogado.id,
+    dataInicio: filtro.dataInicial,
+    dataFinal: filtro.dataFinal,
+    resultado,
+    ativo: true,
+    dataCadastro: new Date(),
+  });
+
+  return { id, resultado, transacoes };
 }
 
 function criaPromptIA(dados, usuarioLogado, transacoes) {

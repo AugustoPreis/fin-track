@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { startOfMonth, endOfMonth } from 'date-fns';
 import axios from 'axios';
-import { Button, Card, Col, Divider, Row } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Divider, FloatButton, Row, Tooltip } from 'antd';
+import { BulbOutlined, SearchOutlined } from '@ant-design/icons';
 import { DatePicker } from '../../../components/DateFnsPicker';
 import Label from '../../../components/Label';
+import { useAuth } from '../../../providers/AuthProvider';
 import { useFeedback } from '../../../providers/FeedbackProvider';
 import Listagem from './Listagem';
 import { ExtratoContext } from './Context';
@@ -16,6 +18,8 @@ export default function Extrato() {
   const [loading, setLoading] = useState(false);
   const [filtro, setFiltro] = useState({ dataInicial: startOfMonth(new Date()), dataFinal: endOfMonth(new Date()) });
   const [data, setData] = useState([]);
+  const auth = useAuth();
+  const navigate = useNavigate();
   const feedback = useFeedback();
 
   useEffect(() => {
@@ -79,6 +83,13 @@ export default function Extrato() {
         changeFiltro,
       }}>
         <Card>
+          <Tooltip placement='left'
+            title='Gerar Análise com IA'>
+            {auth.user?.plano === 'PREMIUM' ? (
+              <FloatButton icon={<BulbOutlined />}
+                onClick={() => navigate('/analises')} />
+            ) : null}
+          </Tooltip>
           <Row gutter={[10, 5]}
             align='bottom'>
             <Col xxl={3}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Avatar, Button, Card, Col, Menu, Row, Typography, Space, Dropdown, Tag } from 'antd';
 import { UserOutlined, LogoutOutlined, MenuOutlined } from '@ant-design/icons';
@@ -11,7 +11,23 @@ export default function AppHeader() {
   const navigate = useNavigate();
   const auth = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState([]);
   const feedback = useFeedback();
+  const menuItems = [
+    { key: '/transacoes', label: 'Transações' },
+    { key: '/categorias', label: 'Categorias' },
+  ];
+
+  if (auth.user?.plano === 'PREMIUM') {
+    menuItems.push({ key: '/analises', label: 'Análises' });
+  }
+
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    const activeItem = menuItems.find(item => item.key === currentPath);
+
+    setSelectedKeys([activeItem?.key || '/transacoes']);
+  }, []);
 
   const handleLogout = (confirm) => {
     if (confirm) {
@@ -35,16 +51,16 @@ export default function AppHeader() {
     });
   }
 
+  const onSelect = (key) => {
+    setSelectedKeys([key]);
+    navigate(key);
+  }
+
   if (!auth.isAuthenticated()) {
     handleLogout();
 
     return null;
   }
-
-  const menuItems = [
-    { key: '/transacoes', label: 'Transações' },
-    { key: '/categorias', label: 'Categorias' },
-  ];
 
   return (
     <Card style={{ marginBottom: 10 }}>
@@ -81,9 +97,9 @@ export default function AppHeader() {
         <Col md={12}
           xs={0}>
           <Menu mode='horizontal'
-            defaultSelectedKeys={['/transacoes']}
-            onClick={(e) => navigate(e.key)}
             items={menuItems}
+            selectedKeys={selectedKeys}
+            onClick={(e) => onSelect(e.key)}
             style={{ borderBottom: 'none', justifyContent: 'center' }} />
         </Col>
         <Col sm={6}

@@ -2,11 +2,13 @@ import { lazy } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const ProtectedRoute = lazy(() => import('./ProtectedRoute'));
+const PremiumRoute = lazy(() => import('./PremiumRoute'));
 
 const Login = lazy(() => import('../pages/usuario/Login'));
 const Cadastro = lazy(() => import('../pages/usuario/Cadastro'));
 const Extrato = lazy(() => import('../pages/transacao/extrato/Extrato'));
 const Categoria = lazy(() => import('../pages/categoria/Categoria'));
+const Analise = lazy(() => import('../pages/analise/Analise'));
 
 export default function AppRouter() {
   const router = createBrowserRouter([
@@ -36,6 +38,15 @@ export default function AppRouter() {
         {
           path: '/categorias',
           element: <Categoria />,
+        },
+        {
+          element: <PremiumRoute />,
+          children: [
+            {
+              path: '/analises',
+              element: <Analise />,
+            },
+          ],
         },
       ],
     },
