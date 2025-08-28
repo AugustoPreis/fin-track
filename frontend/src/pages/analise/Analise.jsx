@@ -26,8 +26,8 @@ export default function Analise() {
     },
   ];
   const pages = [
-    <SituacaoAtual />,
-    <AcaoSistema />,
+    <SituacaoAtual key='situacaoAtual' />,
+    <AcaoSistema key='acaoSistema' />,
   ];
 
   useEffect(() => {

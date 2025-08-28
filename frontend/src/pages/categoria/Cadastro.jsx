@@ -10,7 +10,7 @@ export default function Cadastro({ children, onClose, categoriaId }) {
   const [form] = Form.useForm();
   const feedback = useFeedback();
 
-  const modal = (e) => {
+  const modal = () => {
     setOpen(true);
 
     if (categoriaId) {
